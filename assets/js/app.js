@@ -228,6 +228,8 @@ function visualize(data){
         
         var theCircles = svg.selectAll("g theCircles").data(data).enter()
 
+
+        // Error: <circle> attribute cx: Expected length, "NaN".
         theCircles.append("circle")
             .attr("cx", function(d){
                 return xScale(d[currentX]);
@@ -239,4 +241,24 @@ function visualize(data){
             .attr("class", function(d){
                 return `stateCircle ${d.abbr}`
             })
+            .on("mouseover", function(d){
+                toolTip.show(d, this);
+                d3.select(this).style("stroke", "#323232");
+            })
+            .on("mouseout", function(d){
+                toolTip.hide(d)
+                d3.select(this).style("stroke", "#e3e3e3");
+            })
+
+        theCircles
+            .append("text")
+            .text(function(d){
+                return d.abbr
+            }).attr("dx", function(d){
+                return xScale(d[currentX])
+            })
+            .attr("dy", function(d){
+                return yScale(d[currentY]) + (circRadius / 2.5)
+            })
+            .attr("font-size", circRadius)
 }
